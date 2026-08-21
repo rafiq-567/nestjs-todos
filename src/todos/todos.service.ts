@@ -39,7 +39,7 @@ export class TodosService {
   const todo = this.todos.find(todo => todo.id === id);
 
   if (!todo) {
-    return undefined;
+    throw new NotFoundException('Todo not found');
   }
 
   if (updateTodoDto.title !== undefined) {
@@ -56,7 +56,7 @@ export class TodosService {
 remove(id: number) {
   const index = this.todos.findIndex(todo => todo.id === id);
   if(index === -1) {
-    return undefined;
+    throw new NotFoundException('Todo not found');
   }
   const deletedTodo = this.todos[index];
   this.todos.splice(index, 1);
