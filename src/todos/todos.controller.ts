@@ -25,14 +25,14 @@ export class TodosController {
 
   @Patch(':id')
 update(
-  @Param('id') id: string,
+  @Param('id',ParseIntPipe) id: number,
   @Body() updateTodoDto: UpdateTodoDto,
 ) {
-  return this.todosService.update(Number(id), updateTodoDto);
+  return this.todosService.update(id, updateTodoDto);
 }
 
 @Delete(':id')
-remove(@Param('id') id: string) {
-  return this.todosService.remove(Number(id));
+remove(@Param('id', ParseIntPipe) id: number) {
+  return this.todosService.remove(id);
 }
 }
