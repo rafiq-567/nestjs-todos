@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
 import { TodosService } from './todos.service';
 import { CreateTodoDto } from './create-todo.dto';
 import { UpdateTodoDto } from './update-todo.dto';
@@ -17,9 +17,10 @@ export class TodosController {
     return this.todosService.create(createTodoDto);
   }
 
+  //parsing the id parameter to a number using ParseIntPipe
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.todosService.findOne(Number(id));
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.todosService.findOne(id);
   }
 
   @Patch(':id')
