@@ -1,9 +1,11 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 import { TodosService } from './todos.service';
 import { CreateTodoDto } from './create-todo.dto';
 import { UpdateTodoDto } from './update-todo.dto';
 import { TodosGuard } from './todos.guard';
+import { TodosInterceptor } from './todos.interceptor';
 
+@UseInterceptors(TodosInterceptor)
 @UseGuards(TodosGuard)
 @Controller('todos')
 export class TodosController {

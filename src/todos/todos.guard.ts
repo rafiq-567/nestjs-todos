@@ -9,6 +9,6 @@ export class TodosGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     console.log('Guard running');
 
-    return false;
+    return true;
   }
 }
