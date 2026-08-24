@@ -1,33 +1,27 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTodoDto } from './create-todo.dto';
 import { UpdateTodoDto } from './update-todo.dto';
-
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class TodosService {
-  private todos = [
-    { id: 1, title: 'Learn NestJS', completed: false },
-    { id: 2, title: 'Build a Todo API', completed: false },
-  ];
+  constructor(private prisma: PrismaService) {}
 
   findAll() {
-    return this.todos;
+    return this.prisma.todo.findMany();
   }
 
-  create(createTodoDto: CreateTodoDto) {
-    const todo = {
-      id: this.todos.length + 1,
-      title: createTodoDto.title,
-      completed: false,
-    };
-
-    this.todos.push(todo);
-
-    return todo;
+  async create(createTodoDto: CreateTodoDto) {
+    return this.prisma.todo.create({
+      data: {
+        title: createTodoDto.title,
+        completed: false,
+      },
+    });
   }
 
-  findOne(id: number) {
-    const todo = this.todos.find(todo => todo.id === id);
+  async findOne(id: number) {
+    const todo = await this.prisma.todo.findUnique({ where: { id } });
 
     if (!todo) {
       throw new NotFoundException('Todo not found');
@@ -35,31 +29,21 @@ export class TodosService {
     return todo;
   }
 
-  update(id: number, updateTodoDto: UpdateTodoDto) {
-  const todo = this.todos.find(todo => todo.id === id);
+  async update(id: number, updateTodoDto: UpdateTodoDto) {
+    await this.findOne(id); // throws if not found
 
-  if (!todo) {
-    throw new NotFoundException('Todo not found');
+    return this.prisma.todo.update({
+      where: { id },
+      data: {
+        ...(updateTodoDto.title !== undefined && { title: updateTodoDto.title }),
+        ...(updateTodoDto.completed !== undefined && { completed: updateTodoDto.completed }),
+      },
+    });
   }
 
-  if (updateTodoDto.title !== undefined) {
-    todo.title = updateTodoDto.title;
-  }
+  async remove(id: number) {
+    await this.findOne(id); // throws if not found
 
-  if (updateTodoDto.completed !== undefined) {
-    todo.completed = updateTodoDto.completed;
+    return this.prisma.todo.delete({ where: { id } });
   }
-
-  return todo;
-}
-
-remove(id: number) {
-  const index = this.todos.findIndex(todo => todo.id === id);
-  if(index === -1) {
-    throw new NotFoundException('Todo not found');
-  }
-  const deletedTodo = this.todos[index];
-  this.todos.splice(index, 1);
-  return deletedTodo;
-}
 }
