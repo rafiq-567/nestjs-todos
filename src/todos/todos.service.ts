@@ -28,7 +28,7 @@ export class TodosService {
     }
     return todo;
   }
-
+// added update and remove methods to the TodosService class
   async update(id: number, updateTodoDto: UpdateTodoDto) {
     await this.findOne(id); // throws if not found
 
