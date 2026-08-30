@@ -48,13 +48,15 @@ export class TodosService {
     return this.prisma.todo.delete({ where: { id } });
   }
 
-  async totalUpdate(id: number, totalUpdateTodoDto: TotalUpdateTodoDto){
+  async totalUpdate(id: number, totalUpdateTodoDto: TotalUpdateTodoDto) {
     await this.findOne(id);
 
-    const replacedTodo = {
-      id: id,
-      title: totalUpdateTodoDto.title,
-      completed: totalUpdateTodoDto.completed,
-    }
+    return this.prisma.todo.update({
+      where: { id },
+      data: {
+        title: totalUpdateTodoDto.title,
+        completed: totalUpdateTodoDto.completed,
+      },
+    });
   }
 }

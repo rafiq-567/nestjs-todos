@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, UseGuards, UseInterceptors } from '@nestjs/common';
 import { TodosService } from './todos.service';
 import { CreateTodoDto } from './create-todo.dto';
 import { UpdateTodoDto } from './update-todo.dto';
 import { TodosGuard } from './todos.guard';
 import { TodosInterceptor } from './todos.interceptor';
+import { TotalUpdateTodoDto } from './total-update-todo.dto';
 
 @UseInterceptors(TodosInterceptor)
 @UseGuards(TodosGuard)
@@ -40,6 +41,9 @@ export class TodosController {
     return this.todosService.remove(id);
   }
 
-
+@Put(':id')
+totalUpdate(@Param('id', ParseIntPipe) id: number, @Body() totalUpdateTodoDto: TotalUpdateTodoDto){
+  return this.todosService.totalUpdate(id, totalUpdateTodoDto)
+}
 
 }
