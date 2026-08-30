@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTodoDto } from './create-todo.dto';
 import { UpdateTodoDto } from './update-todo.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { TotalUpdateTodoDto } from './total-update-todo.dto';
 
 @Injectable()
 export class TodosService {
@@ -45,5 +46,15 @@ export class TodosService {
     await this.findOne(id); // throws if not found
 
     return this.prisma.todo.delete({ where: { id } });
+  }
+
+  async totalUpdate(id: number, totalUpdateTodoDto: TotalUpdateTodoDto){
+    await this.findOne(id);
+
+    const replacedTodo = {
+      id: id,
+      title: totalUpdateTodoDto.title,
+      completed: totalUpdateTodoDto.completed,
+    }
   }
 }
